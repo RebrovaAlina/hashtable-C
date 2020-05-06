@@ -39,7 +39,7 @@ void hashtab_add(struct listnode **hashtab, char *key, int value, ST_ERR *err)
                 node->next = hashtab[index];
                 hashtab[index] = node;
                 return;
-        } else printf("hi");
+        };
 }
 struct listnode *hashtab_lookup( struct listnode **hashtab, char *key, ST_ERR *err)
 {

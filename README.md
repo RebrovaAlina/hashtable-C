@@ -22,3 +22,17 @@ There is no table
 Test_8	->	FAILED
 
 valgrind
+
+HEAP SUMMARY:
+    in use at exit: 0 bytes in 0 blocks
+  total heap usage: 6 allocs, 6 frees, 2,209 bytes allocated
+
+All heap blocks were freed -- no leaks are possible
+
+For counts of detected and suppressed errors, rerun with: -v
+ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+
+gcov
+
+Lines executed:88.57% of 70

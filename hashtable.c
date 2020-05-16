@@ -29,6 +29,7 @@ void hashtab_init(struct listnode **hashtab)
 
 void hashtab_add(struct listnode **hashtab, char *key, int value, ST_ERR *err)
 {
+        *err= STERR_SUCCESS;
         struct listnode *node;
         int index = hashtab_hash(key);
         node = malloc(sizeof(*node));
@@ -48,6 +49,7 @@ void hashtab_add(struct listnode **hashtab, char *key, int value, ST_ERR *err)
 
 struct listnode *hashtab_lookup( struct listnode **hashtab, char *key, ST_ERR *err
 {
+        *err= STERR_SUCCESS;
         int index;
         struct listnode *node;
         index = hashtab_hash(key);
@@ -69,6 +71,7 @@ struct listnode *hashtab_lookup( struct listnode **hashtab, char *key, ST_ERR *e
 };
 void hashtab_delete(struct listnode **hashtab, char *key, ST_ERR *err)
 {
+        *err= STERR_SUCCESS;
         int index;
         struct listnode *p, *prev = NULL;
         index = hashtab_hash(key);
@@ -93,6 +96,7 @@ void hashtab_delete(struct listnode **hashtab, char *key, ST_ERR *err)
 }
 void delete_all(struct listnode **hashtab, ST_ERR *err)
 {
+        *err= STERR_SUCCESS;
         int index = 0;
         int i = 0;
         struct listnode *p, *prev = NULL;

@@ -5,18 +5,19 @@
 #include <limits.h>
 #include <unistd.h>
 #define HASHTAB_SIZE 128
-#define HASHTAB_MUL 31
 
 unsigned int hashtab_hash(char *key)
 {
-        unsigned int h = 0;
-        char *p;
-        for (p = key; *p != '\0'; p++)
-        {
-                h = h * HASHTAB_MUL + (unsigned int)*p;
-        }
-        return h % HASHTAB_SIZE;
+        int len = strlen(key), hashf = 0;
+        if (len <= 1)
+               hashf = key[0];
+        else
+               hashf = key[0] + key[len-1];
+        return hashf % HASHTAB_SIZE;
+
+
 }
+
 void hashtab_init(struct listnode **hashtab)
 {
         int i;
@@ -29,9 +30,8 @@ void hashtab_init(struct listnode **hashtab)
 void hashtab_add(struct listnode **hashtab, char *key, int value, ST_ERR *err)
 {
         struct listnode *node;
-        int index = hashtab_hash(key); // Вставка в начало списка
+        int index = hashtab_hash(key);
         node = malloc(sizeof(*node));
-
         if (node != NULL)
         {
                 node->key = key;
@@ -39,9 +39,14 @@ void hashtab_add(struct listnode **hashtab, char *key, int value, ST_ERR *err)
                 node->next = hashtab[index];
                 hashtab[index] = node;
                 return;
-        };
+        }
+        fprintf(stderr, "Can't add the element\n");
+        if (err != NULL)
+                *err= STERR_NOADD;
+        return;
 }
-struct listnode *hashtab_lookup( struct listnode **hashtab, char *key, ST_ERR *err)
+
+struct listnode *hashtab_lookup( struct listnode **hashtab, char *key, ST_ERR *err
 {
         int index;
         struct listnode *node;
@@ -49,8 +54,11 @@ struct listnode *hashtab_lookup( struct listnode **hashtab, char *key, ST_ERR *e
         for (node = hashtab[index]; node != NULL; node = node->next)
         {
                 if (strcmp(node->key, key) == 0)
+                {
+                        printf("Node: %s, %d\n", node->key, node->value);
                         return node;
-        }
+                };
+        };
         fprintf(stderr, "No such element\n");
         if (err != NULL)
         {
@@ -79,7 +87,34 @@ void hashtab_delete(struct listnode **hashtab, char *key, ST_ERR *err)
 
         fprintf(stderr, "Can't delete the element\n");
         if (err != NULL)
-                              *err= STERR_DELETED;
+                *err= STERR_DELETED;
 
 
+}
+void delete_all(struct listnode **hashtab, ST_ERR *err)
+{
+        int index = 0;
+        int i = 0;
+        struct listnode *p, *prev = NULL;
+        for (index = 0; index < HASHTAB_SIZE; index++)
+        {
+                p = hashtab[index];
+                if(p!=NULL)
+                {
+                        if (prev == NULL)
+                                hashtab[index] = p->next;
+                        else prev->next = p->next;
+                        free(p);
+                        i++;
+                };
+                prev = p;
+        }
+
+        if(i==0)
+        {
+                fprintf(stderr, "There is no table\n");
+                if (err != NULL)
+                        *err= STERR_DELETEDALL;
+                return;
+        }
 }

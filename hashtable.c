@@ -4,8 +4,6 @@
 #include "hashtable.h"
 #include <limits.h>
 #include <unistd.h>
-#define HASHTAB_SIZE 128
-
 unsigned int hashtab_hash(char *key)
 {
         int len = strlen(key), hashf = 0;
@@ -14,8 +12,6 @@ unsigned int hashtab_hash(char *key)
         else
                hashf = key[0] + key[len-1];
         return hashf % HASHTAB_SIZE;
-
-
 }
 
 void hashtab_init(struct listnode **hashtab)
@@ -29,7 +25,7 @@ void hashtab_init(struct listnode **hashtab)
 
 void hashtab_add(struct listnode **hashtab, char *key, int value, ST_ERR *err)
 {
-        *err= STERR_SUCCESS;
+        *err = STERR_SUCCESS;
         struct listnode *node;
         int index = hashtab_hash(key);
         node = malloc(sizeof(*node));
@@ -42,12 +38,13 @@ void hashtab_add(struct listnode **hashtab, char *key, int value, ST_ERR *err)
                 return;
         }
         fprintf(stderr, "Can't add the element\n");
-        if (err != NULL)
+        if (err != STERR_SUCCESS)
                 *err= STERR_NOADD;
         return;
 }
 
-struct listnode *hashtab_lookup( struct listnode **hashtab, char *key, ST_ERR *err
+
+struct listnode *hashtab_lookup( struct listnode **hashtab, char *key, ST_ERR *err)
 {
         *err= STERR_SUCCESS;
         int index;
@@ -62,13 +59,14 @@ struct listnode *hashtab_lookup( struct listnode **hashtab, char *key, ST_ERR *e
                 };
         };
         fprintf(stderr, "No such element\n");
-        if (err != NULL)
+        if (err != STERR_SUCCESS)
         {
                 *err= STERR_NOELEM;
                 return NULL;
         }
         return NULL;
 };
+
 void hashtab_delete(struct listnode **hashtab, char *key, ST_ERR *err)
 {
         *err= STERR_SUCCESS;
@@ -89,11 +87,12 @@ void hashtab_delete(struct listnode **hashtab, char *key, ST_ERR *err)
         }
 
         fprintf(stderr, "Can't delete the element\n");
-        if (err != NULL)
+        if (err != STERR_SUCCESS)
                 *err= STERR_DELETED;
 
 
 }
+
 void delete_all(struct listnode **hashtab, ST_ERR *err)
 {
         *err= STERR_SUCCESS;
@@ -117,7 +116,7 @@ void delete_all(struct listnode **hashtab, ST_ERR *err)
         if(i==0)
         {
                 fprintf(stderr, "There is no table\n");
-                if (err != NULL)
+                if (err != STERR_SUCCESS)
                         *err= STERR_DELETEDALL;
                 return;
         }
